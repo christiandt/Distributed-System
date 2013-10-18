@@ -4,6 +4,7 @@ from Replica import *
 from Transmission import *
 from Event import *
 import re
+import sys
 
 replicas_num = 3
 replicas = [Replica(replicas_num) for i in range(replicas_num)]
@@ -52,7 +53,7 @@ def getValue(replicaID, key):
     if key in replica.keys:
         print replica.keys[key]
     else:
-        print None
+        print "null"
 
 
 def printState(replicaID):
@@ -144,7 +145,8 @@ def demo():
     print '> getValue(2, "X")'
     getValue(2, "X")
 
-def replicaTest():
+
+def garbageTest():
     print 'increment(1, "X")'
     increment(1, "X", True)
     print 'increment(3, "X")'
@@ -174,4 +176,38 @@ def replicaTest():
     print 'printState(3)'
     printState(3)
 
-demo()
+
+def user_input():
+    try:
+        array_input = re.split("[()]", raw_input())
+    except TypeError:
+        print "Illegal Input"
+    else:
+        if len(array_input) == 3:
+            process = array_input[0]
+            key = array_input[1]
+            if "," in key:
+                array_input = [x.strip().strip('""') for x in key.split(',')]
+                if len(array_input) == 2:
+                    value1 = int(array_input[0])
+                    value2 = str(array_input[1])
+                    if process == "Increment": increment(value1, value2, True)
+                    elif process == "Decrement": decrement(value1, value2, True)
+                    elif process == "getValue": getValue(value1, value2)
+                    elif process == "SendLog": sendLog(value1, int(value2))
+                    else: print "Illegal Input"
+                else:
+                    print "Illegal Input"
+            else:
+                if process == "Demo": demo()
+                elif process == "GarbageDemo": garbageTest()
+                elif process == "End": sys.exit()
+                elif process == "PrintState": printState(int(key))
+                elif process == "ReceiveLog": receiveLog(int(key))
+                else: print "Illegal Input"
+        else:
+            print "Illegal Input"
+
+
+while True:
+    user_input()
