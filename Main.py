@@ -101,15 +101,20 @@ def receiveLog(transmissionNumber):
     for event in receivedLog:
         if not hasrec(localTable, event, transmission.destination):
             receiver.log.append(event)
-            logToFunction(transmission.destination, event.operation)
-    #localTable[transmission.destination][transmission.source] = receivedTable[transmission.source][transmission.source]
+            executeEvent(transmission.destination, event)
     for i in range(len(localTable)):
         localTable[transmission.destination][i] = max(localTable[transmission.destination][i], receivedTable[transmission.source][i])
         localTable[i] = [max(received, local) for received, local in zip(receivedTable[i], localTable[i])]
+    #Garbage-collect:
+    for event in receiver.log:
+        replicas_with_event = 0
+        for i in range(len(replicas)):
+            if hasrec(receiver.timeTable, event, i): replicas_with_event += 1
+        if replicas_with_event >= replicas_num: receiver.log.remove(event)
 
 
-def logToFunction(replicaID, string_input):
-    array_input = re.split("[()]", string_input)
+def executeEvent(replicaID, event):
+    array_input = re.split("[()]", event.operation)
     if len(array_input) == 3:
         process = array_input[0]
         key = array_input[1]
@@ -117,7 +122,7 @@ def logToFunction(replicaID, string_input):
         elif process == "decrement": decrement(replicaID+1, key, False)
 
 
-def exampleOutput():
+def demo():
     print '> increment(1, "X")'
     increment(1, "X", True)
     print '> getValue(1, "X")'
@@ -139,31 +144,34 @@ def exampleOutput():
     print '> getValue(2, "X")'
     getValue(2, "X")
 
-print 'increment(1, "X")'
-increment(1, "X", True)
-print 'increment(3, "X")'
-increment(3, "X", True)
-print 'sendLog(1,2)'
-sendLog(1, 2)
-print 'receiveLog(1)'
-receiveLog(1)
-print 'increment(1, "Y")'
-increment(1, "Y", True)
-print 'sendLog(1,3)'
-sendLog(1, 3)
-print 'receiveLog(2)'
-receiveLog(2)
-print 'sendLog(3,2)'
-sendLog(3, 2)
-print 'sendLog(3,2)'
-sendLog(3, 2)
-print 'receiveLog(3)'
-receiveLog(3)
-print 'receiveLog(4)'
-receiveLog(4)
-print 'printState(1)'
-printState(1)
-print 'printState(2)'
-printState(2)
-print 'printState(3)'
-printState(3)
+def replicaTest():
+    print 'increment(1, "X")'
+    increment(1, "X", True)
+    print 'increment(3, "X")'
+    increment(3, "X", True)
+    print 'sendLog(1,2)'
+    sendLog(1, 2)
+    print 'receiveLog(1)'
+    receiveLog(1)
+    print 'increment(1, "Y")'
+    increment(1, "Y", True)
+    print 'sendLog(1,3)'
+    sendLog(1, 3)
+    print 'receiveLog(2)'
+    receiveLog(2)
+    print 'sendLog(3,2)'
+    sendLog(3, 2)
+    print 'sendLog(3,2)'
+    sendLog(3, 2)
+    print 'receiveLog(3)'
+    receiveLog(3)
+    print 'receiveLog(4)'
+    receiveLog(4)
+    print 'printState(1)'
+    printState(1)
+    print 'printState(2)'
+    printState(2)
+    print 'printState(3)'
+    printState(3)
+
+demo()
