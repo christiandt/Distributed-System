@@ -10,6 +10,7 @@ Run Main.py and start typing one of the following commands:
 - PrintState(replicaID)
 - SendLog(sourceReplicaID, destinationReplicaID)
 - ReceiveLog(transmissionID)
+- End()
 
 
 ## Test-input:
