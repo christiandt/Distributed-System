@@ -3,7 +3,7 @@ Distributed-System
 A simple implementation of a distributed system and the replicated log problem. A mock network is simulated using the Transmission-class and Network-array.
 Run Main.py and start typing one of the following commands:
 - Demo()
-- GarbageTest()
+- GarbageDemo()
 - Increment(replicaID, key)
 - Decrement(replicaID, key)
 - getValue(replicaID, key)
